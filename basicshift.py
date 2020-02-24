@@ -6,4 +6,8 @@ rclk  = 4
 srclk = 17
 srclr = 27
     
-sr = ShiftRegister(ser, oe, rclk, srclk, srclr)
+sr = ShiftRegister(ser=ser,
+                   oe=oe,
+                   rclk=rclk,
+                   srclk=serclk,
+                   srclr=srclr)
