@@ -4,17 +4,19 @@ GPIO.setmode(GPIO.BCM)
 from time import sleep
 
 class ShiftRegister:
-    def __init__(self, ser, oe, rclk, srclk, srclr):
+    def __init__(self, ser, rclk, srclk,  oe=None, srclr=None):
         self.ser   = ser
         self.oe    = oe
         self.rclk  = rclk
         self.srclk = srclk
         self.srclr = srclr
         GPIO.setup(self.ser, GPIO.OUT, initial=GPIO.LOW)
-        GPIO.setup(self.oe, GPIO.OUT, initial=GPIO.LOW)
         GPIO.setup(self.rclk, GPIO.OUT, initial=GPIO.LOW)
         GPIO.setup(self.srclk, GPIO.OUT, initial=GPIO.LOW)
-        GPIO.setup(self.srclr, GPIO.OUT, initial=GPIO.HIGH)
+        if self.oe is not None:
+            GPIO.setup(self.oe, GPIO.OUT, initial=GPIO.LOW)
+        if self.srclr is not None:
+            GPIO.setup(self.srclr, GPIO.OUT, initial=GPIO.HIGH)
         
     @staticmethod
     def pulse(pin, delay=0):
@@ -62,6 +64,20 @@ class ShiftRegister:
                 byte_list.insert(0, (binary[i*8:(i+1)*8]))
             for byte in byte_list:
                 self.shift_bits(byte, delay, update_on_pulse)
+    
+    def output(self, output):
+        if output and self.oe is not None:
+            GPIO.output(self.oe, GPIO.HIGH)
+        elif not output and self.oe is not None:
+            GPIO.output(self.oe, GPIO.LOW)
+    
+    def clear(self):
+        if self.srclr is not None:
+            GPIO.output(self.srclr, GPIO.LOW)
+            GPIO.output(self.srclr, GPIO.HIGH)
+    
+    def update(self):
+        ShiftRegister.pulse(self.rclk)
 
 def main():
     pass
