@@ -3,6 +3,7 @@ from shiftregister import ShiftRegister
 
 MAP = {
         #  : "ABCDEFG"
+        "0": "1111110",
         "1": "0110000",
         "2": "1101101",
         "3": "1111001",
@@ -29,5 +30,6 @@ class SevenSegment:
             binary += "1"
         else:
             binary += "0"
+        print(binary)
         self.shift.shift_bits(binary)
         self.shift.update()
